@@ -87,7 +87,7 @@ mkdir -p /mnt/ssd/
 
 # Add service users
 adduser --system --group --disabled-login --home /mnt/ssd/bitcoin/      bitcoin
-adduser --system --group --disabled-login --no-create-home              electrs
+adduser --system --ingroup bitcoin --disabled-login --no-create-home    electrs
 adduser --system --group --disabled-login --home /var/run/avahi-daemon  avahi
 adduser --system --group --disabled-login --no-create-home              prometheus
 adduser --system --group --disabled-login --no-create-home              node_exporter
@@ -233,8 +233,6 @@ disablewallet=1
 pid=/run/bitcoind/bitcoind.pid
 
 # rpc
-rpcuser=bitcoinrpc
-rpcpassword=JemeeWaiChooroo4uepi
 rpcconnect=127.0.0.1
 
 # performance
@@ -257,6 +255,11 @@ After=network.target startup-checks.service
 Requires=startup-checks.service
 [Service]
 ExecStart=/usr/bin/bitcoind -daemon -conf=/etc/bitcoin/bitcoin.conf 
+# Note: we need this ExecStartPost command to prepare an .env file
+# in expected format for electrs to have the RPCPASSWORD in its
+# environment. If we contributed a --cookie-file flag to upstream
+# electrs that could parse the .cookie file, we would not need this.
+ExecStartPost=/bin/bash -c "sleep 5 && echo \"RPCPASSWORD=$(tail -c +12 /mnt/ssd/bitcoin/.bitcoin/testnet3/.cookie)\" > /mnt/ssd/bitcoin/.bitcoin/testnet3/.cookie.env"
 RuntimeDirectory=bitcoind
 User=bitcoin
 Group=bitcoin
@@ -289,8 +292,6 @@ make install
 mkdir -p /etc/lightningd/
 cat << EOF > /etc/lightningd/lightningd.conf
 bitcoin-cli=/usr/bin/bitcoin-cli
-bitcoin-rpcuser=bitcoinrpc
-bitcoin-rpcpassword=JemeeWaiChooroo4uepi
 bitcoin-rpcconnect=127.0.0.1
 bitcoin-rpcport=18332
 network=testnet
@@ -363,9 +364,6 @@ chmod +x /usr/bin/electrs
 mkdir -p /etc/electrs/
 cat << EOF > /etc/electrs/electrs.conf
 NETWORK=testnet
-RPCUSER=bitcoinrpc
-RPCPASSWORD=JemeeWaiChooroo4uepi
-#COOKIE=/mnt/ssd/bitcoin/.bitcoin/.cookie
 RPCCONNECT=127.0.0.1
 RPCPORT=18332
 DB_DIR=/mnt/ssd/electrs/db
@@ -380,10 +378,11 @@ Wants=bitcoind.service
 After=bitcoind.service
 [Service]
 EnvironmentFile=/etc/electrs/electrs.conf
-ExecStart=/usr/bin/electrs --network ${NETWORK} -${VERBOSITY} --index-batch-size=10 --jsonrpc-import --db-dir ${DB_DIR} --cookie="${RPCUSER}:${RPCPASSWORD}" --daemon-rpc-addr ${RPCCONNECT}:${RPCPORT}
+EnvironmentFile=/mnt/ssd/bitcoin/.bitcoin/testnet3/.cookie.env
+ExecStart=/bin/bash -c "electrs --network ${NETWORK} -${VERBOSITY} --index-batch-size=10 --jsonrpc-import --db-dir ${DB_DIR} --daemon-rpc-addr ${RPCCONNECT}:${RPCPORT} --cookie __cookie__:${RPCPASSWORD}"
 RuntimeDirectory=electrs
 User=electrs
-Group=electrs
+Group=bitcoin
 Type=simple
 KillMode=process
 Restart=always
