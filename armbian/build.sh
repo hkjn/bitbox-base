@@ -10,9 +10,9 @@ set -eu
 # Settings
 #
 # VirtualBox Number of CPU cores
-VIRTUALBOX_CPU="4"
+VIRTUALBOX_CPU=${VIRTUALBOX_CPU:-"4"}
 # VirtualBox Memory in MB
-VIRTUALBOX_MEMORY="8192"
+VIRTUALBOX_MEMORY=${VIRTUALBOX_MEMORY:-"8192"}
 
 function usage() {
 	echo "Build customized Armbian base image for BitBox Base"
