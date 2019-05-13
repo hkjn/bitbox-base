@@ -20,7 +20,7 @@ function usage() {
 }
 
 function cleanup() {
-	if [[ "${ACTION}" != "clean" ]]; then 
+	if [[ "${ACTION}" != "clean" ]]; then
 		echo "Cleaning up by halting any running vagrant VMs.."
 		vagrant halt
 	fi
@@ -72,8 +72,8 @@ case ${ACTION} in
 		;;
 
 	clean)
-	    set +e
-		if [ -d "armbian-build" ]; then 
+		set +e
+		if [ -d "armbian-build" ]; then
 			cd armbian-build
 			vagrant halt 
 			vagrant destroy -f
