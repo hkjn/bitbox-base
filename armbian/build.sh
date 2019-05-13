@@ -47,13 +47,14 @@ case ${ACTION} in
 
 		if [ ! -d "armbian-build" ]; then 
 			git clone https://github.com/armbian/build armbian-build
-			sed -i "s/#vb.memory = \"8192\"/vb.memory = \"${VIRTUALBOX_MEMORY}\"/g" armbian-build/Vagrantfile
-                        sed -i "s/#vb.cpus = \"4\"/vb.cpus = \"${VIRTUALBOX_CPU}\"/g" armbian-build/Vagrantfile
 			cd armbian-build
 		else 
 			cd armbian-build
 			git pull --no-rebase
 		fi
+		# xx: need to match both '#vb.memory = 8192' and 'vb.memory = 1024' (for example)
+		sed -i "s/#vb.memory = \"8192\"/vb.memory = \"${VIRTUALBOX_MEMORY}\"/g" armbian-build/Vagrantfile
+		sed -i "s/#vb.cpus = \"4\"/vb.cpus = \"${VIRTUALBOX_CPU}\"/g" armbian-build/Vagrantfile
 
 		vagrant up
 		mkdir -p output/
