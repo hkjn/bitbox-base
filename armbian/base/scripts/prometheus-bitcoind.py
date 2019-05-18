@@ -35,6 +35,7 @@ BITCOIN_MEMPOOL_BYTES = Gauge("bitcoin_mempool_bytes", "Size of mempool in bytes
 BITCOIN_MEMPOOL_SIZE = Gauge(
     "bitcoin_mempool_size", "Number of unconfirmed transactions in mempool"
 )
+BITCOIN_MEMPOOL_FEE_SUM = Gauge("bitcoin_mempool_fee_sum", "Sum of fees in mempool")
 BITCOIN_LATEST_BLOCK_SIZE = Gauge("bitcoin_latest_block_size", "Size of latest block in bytes")
 BITCOIN_LATEST_BLOCK_TXS = Gauge(
     "bitcoin_latest_block_txs", "Number of transactions in latest block"
@@ -61,10 +62,12 @@ def find_bitcoin_cli():
 BITCOIN_CLI_PATH = str(find_bitcoin_cli())
 
 
-def bitcoin(cmd):
+def bitcoin(cmd, extra_args=None):
     args = [cmd]
     if len(bitcoind_conf) > 0:
         args = [bitcoind_conf] + args
+    if extra_args:
+        args.extend(extra_args)
     bitcoin = subprocess.Popen(
         [BITCOIN_CLI_PATH] + args,
         stdout=subprocess.PIPE,
@@ -72,6 +75,8 @@ def bitcoin(cmd):
         stderr=subprocess.PIPE,
     )
     output = bitcoin.communicate()[0]
+    if not output:
+        raise Exception("empty output from {}".format(args))
     return json.loads(output.decode("utf-8"))
 
 
@@ -118,7 +123,7 @@ def get_raw_tx(txid):
 
 
 def main():
-    # Start up the server to expose the metrics.
+    print('Starting metrics server on tcp/8334..')
     start_http_server(8334)
     while True:
         try:
@@ -131,7 +136,8 @@ def main():
             blockchaininfo = bitcoin("getblockchaininfo")
             networkinfo = bitcoin("getnetworkinfo")
             chaintips = len(bitcoin("getchaintips"))
-            mempool = bitcoin("getmempoolinfo")
+            mempool_info = bitcoin("getmempoolinfo")
+            rawmempool = bitcoin("getrawmempool", extra_args=["true"])
             nettotals = bitcoin("getnettotals")
             latest_block = get_block(str(blockchaininfo["bestblockhash"]))
             hashps = float(bitcoincli("getnetworkhashps"))
@@ -150,8 +156,12 @@ def main():
 
             BITCOIN_NUM_CHAINTIPS.set(chaintips)
 
-            BITCOIN_MEMPOOL_BYTES.set(mempool["bytes"])
-            BITCOIN_MEMPOOL_SIZE.set(mempool["size"])
+            BITCOIN_MEMPOOL_BYTES.set(mempool_info["bytes"])
+            BITCOIN_MEMPOOL_SIZE.set(mempool_info["size"])
+            mempool_fee_sum = 0.0
+            for key in rawmempool:
+                mempool_fee_sum += rawmempool[key]['fee']
+            BITCOIN_MEMPOOL_FEE_SUM.set(mempool_fee_sum)
 
             BITCOIN_TOTAL_BYTES_RECV.set(nettotals["totalbytesrecv"])
             BITCOIN_TOTAL_BYTES_SENT.set(nettotals["totalbytessent"])
