@@ -1,7 +1,5 @@
 # BitBox Base Middleware
 
-### THIS IS DEMO CODE AND NOT MEANT FOR PRODUCTION USE
-
 This project serves as a communication hub between bitcoin core, electrum-x,
 c-lightning and further services that run on the base and the
 bitbox-wallet-app.
