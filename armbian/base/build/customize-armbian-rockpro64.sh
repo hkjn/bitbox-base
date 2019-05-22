@@ -511,6 +511,13 @@ cp /tmp/overlay/bbbfancontrol.service /etc/systemd/system/
 ## see https://github.com/digitalbitbox/bitbox-base/blob/master/middleware/README.md
 cp /tmp/overlay/base-middleware /usr/local/sbin/
 
+# xx: build the go binaries (base-middleware) in github releases
+# 1. move compilation of go tools out of this script and take it from the host instead
+# 2. add Makefile and build.sh hooks to build the go tools
+# 3. document the new behavior
+# 4. file issues for also moving electrs and c-lightning out of the customization script
+# 5. add github releases for the binaries above
+
 mkdir -p /etc/base-middleware/
 cat << EOF > /etc/base-middleware/base-middleware.conf
 BITCOIN_RPCUSER=__cookie__
