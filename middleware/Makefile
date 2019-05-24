@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .DEFAULT_GOAL := aarch64
 REPO_ROOT=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/..
 SHELL:=/bin/bash
@@ -11,6 +12,7 @@ ci:
 	golangci-lint run
 
 envinit:
+<<<<<<< HEAD
 <<<<<<< HEAD
 	@echo "Initializing Go environment.."
 	$(REPO_ROOT)/middleware/scripts/envinit.sh
@@ -26,8 +28,9 @@ aarch64: check-go-env fetch-deps ci
 	GOARCH=arm64 go install $(REPO_ROOT)/middleware/cmd/middleware
 	cp ${GOPATH}/bin/linux_arm64/middleware $(REPO_ROOT)/build/base-middleware
 native:
-	cd src && go build -o base-middleware && mv base-middleware ..
+	go build -o ../build/base-middleware ./src/
 aarch64:
 	cd src && GOARCH=arm64 go build -o base-middleware && mv base-middleware ..
 ci:
 	./scripts/ci.sh
+	GOARCH=arm64 go build -o ../base-middleware ./src/
