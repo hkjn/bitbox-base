@@ -154,8 +154,10 @@ if ! mountpoint /mnt/ssd -q; then
   chmod 700 /mnt/ssd
 fi
 
-apt remove -y ntp network-manager
-apt purge -y ntp network-manager
+#xx: re-enable if this becomes more stable, c.f
+# https://github.com/shiftdevices/bitbox-base-internal/issues/160
+#apt remove -y ntp network-manager
+#apt purge -y ntp network-manager
 
 
 # DEPENDENCIES -----------------------------------------------------------------
