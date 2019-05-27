@@ -15,7 +15,7 @@ clean:
 	bash $(MAKE_PATH)/build.sh clean
 
 flash-emmc:
-	sudo dd if=armbian-build/output/images/Armbian_5.86_Rockpro64_Debian_stretch_default_4.4.178.img of=/dev/disk/by-id/usb-Generic_STORAGE_DEVICE_000000000250-0:0 bs=64K conv=sync status=progress
+	sudo dd if=armbian-build/output/images/Armbian_5.77_Rockpro64_Debian_stretch_default_4.4.176.img of=/dev/disk/by-id/usb-Generic_STORAGE_DEVICE_000000000250-0:0 bs=64K conv=sync status=progress
 
 scan-devices:
 	nmap -sP 192.168.1.1/24
