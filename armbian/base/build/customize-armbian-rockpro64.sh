@@ -420,6 +420,9 @@ lightning-dir=/mnt/ssd/bitcoin/.lightning-testnet
 bind-addr=127.0.0.1:9735
 proxy=127.0.0.1:9050
 log-level=debug
+# xx: should include announce-addr=<.onion service written to /var/lib/tor/lightningd-service_v3/hostname
+# when tor.service starts>
+daemon
 plugin=/opt/shift/scripts/prometheus-lightningd.py
 EOF
 
