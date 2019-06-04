@@ -5,3 +5,5 @@
 /tools/bbbsupervisor/bbbsupervisor
 *.sw?
 /build/
+_site/
+.jekyll-metadata
