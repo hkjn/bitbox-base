@@ -31,10 +31,11 @@ case ${ACTION} in
 
 		git log --pretty=format:'%h' -n 1 > ./base/config/latest_commit
 
-		if [ ! -d "armbian-build" ]; then 
-			git clone https://github.com/armbian/build armbian-build
-		fi
-		cd armbian-build
+		#if [ ! -d "armbian-build" ]; then 
+	#		git clone https://github.com/armbian/build armbian-build
+		#fi
+		#cd armbian-build
+		cd build
 
 		mkdir -p output/
 		mkdir -p userpatches/overlay
