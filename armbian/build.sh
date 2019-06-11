@@ -49,6 +49,7 @@ case ${ACTION} in
 			BUILD_ARGS="${BUILD_ARGS} CLEAN_LEVEL=oldcache PROGRESS_LOG_TO_FILE=yes"
 		fi
 		time ./compile.sh ${BUILD_ARGS}
+		echo "I am at $(pwd) and have output: $(ls -R output/)"
 		sha256sum output/images/Armbian_*.img
 		;;
 esac
