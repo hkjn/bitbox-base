@@ -49,6 +49,8 @@ case ${ACTION} in
 			BUILD_ARGS="${BUILD_ARGS} CLEAN_LEVEL=oldcache PROGRESS_LOG_TO_FILE=yes"
 		fi
 		time ./compile.sh ${BUILD_ARGS}
-
+		sha256sum output/images/Armbian_*.img
 		;;
 esac
+
+echo "build.sh is all done!"
