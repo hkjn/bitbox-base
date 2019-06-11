@@ -13,7 +13,10 @@
 # use configuration files like config-default.conf to set the build configuration
 # check Armbian documentation for more info
 
-SRC="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+# SRC="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
+# xx: changed to more robust SRC
+SRC="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # fallback for Trusty
 [[ -z "${SRC}" ]] && SRC="$(pwd)"
 
