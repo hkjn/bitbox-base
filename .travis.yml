@@ -14,5 +14,5 @@ addons:
       - make
 
 script:
-    - travis_wait 30 ./scripts/travis-ci.sh
+    - travis_wait 40 ./scripts/travis-ci.sh
 
