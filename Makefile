@@ -40,3 +40,12 @@ docker-build-go: dockerinit
 
 ci: dockerinit
 	./scripts/travis-ci.sh
+
+docker-jekyll:
+	@echo "Starting docker-jekyll server at localhost:4000.."
+	# Note: we need to remove the directory below (if present) from the
+	# Armbian build process for unknown reasons, or the Jekyll command fails with:
+	# xxx
+	rm -rf $(REPO_ROOT)/armbian/armbian-build/packages/bsp/common/
+	docker run --rm -it -p 4000:4000 -v $(shell pwd):/srv/jekyll \
+	       jekyll/jekyll:pages jekyll serve --watch --incremental

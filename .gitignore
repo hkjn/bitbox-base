@@ -5,3 +5,6 @@ build
 tools/bbbfancontrol/bbbfancontrol
 tools/bbbsupervisor/bbbsupervisor
 *.sw?
+# Jekyll metadata
+_site/
+.jekyll-metadata
