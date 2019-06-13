@@ -154,11 +154,8 @@ if ! mountpoint /mnt/ssd -q; then
   chmod 700 /mnt/ssd
 fi
 
-#xx: re-enable if this becomes more stable, c.f
-# https://github.com/shiftdevices/bitbox-base-internal/issues/160
-#apt remove -y ntp network-manager
-#apt purge -y ntp network-manager
-
+apt remove -y ntp network-manager
+apt purge -y ntp network-manager
 
 # DEPENDENCIES -----------------------------------------------------------------
 apt update
@@ -517,11 +514,9 @@ cp /tmp/overlay/bbbfancontrol.service /etc/systemd/system/
 cp /tmp/overlay/base-middleware /usr/local/sbin/
 
 # xx: build the go binaries (base-middleware) in github releases
-# 1. move compilation of go tools out of this script and take it from the host instead
-# 2. add Makefile and build.sh hooks to build the go tools
-# 3. document the new behavior
-# 4. file issues for also moving electrs and c-lightning out of the customization script
-# 5. add github releases for the binaries above
+# 1. document the new build of Go tools using Makefile's
+# 2. file issues for also moving electrs and c-lightning out of the customization script
+# 3. add github releases for the binaries above
 
 mkdir -p /etc/base-middleware/
 cat << EOF > /etc/base-middleware/base-middleware.conf
