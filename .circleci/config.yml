@@ -12,8 +12,8 @@ jobs:
       - run: git log -1
       - run: ls -lah
       - run:
-          name: make docker-build-go
-          command: make docker-build-go
+          name: make
+          command: make
 workflows:
   version: 2
   build:
