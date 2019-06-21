@@ -1,4 +1,5 @@
 .DEFAULT_GOAL := build
+.PHONY: build update clean
 MAKE_PATH=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 build:
